@@ -8,13 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomepageController extends AbstractController
+class QuizController extends AbstractController
 {
     /**
-     * @Route("/", name="app_home")
+     * @Route("/admin/new_quiz", name="app_quiz_new")
      */
     public function show() : Response
     {
-        return $this->render('homepage/home.html.twig');
+        return $this->render('quiz/control_panel.html.twig');
     }
 }

@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Web App - Users{% endblock %}
+
+
+{% block body %}
+    <div class="container mx-auto my-auto">
+        {% if app.user.isBlocked %}
+        <h1>You have been blocked</h1>
+        <h2><a href="{{ path('app_logout') }}">Logout</a></h2>
+        {% else %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark position-sticky">
+            <a class="navbar-brand col-lg-1" href="#"><h1>Quizzz</h1></a>
+            <div class="collapse navbar-collapse pl-5">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link " href="{{ path('app_home') }}"><h2 class="text-white">Home</h2></a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item active ">
+                            <a class="nav-link" href="{{ path('app_users') }}"><h2 class="text-white">Users</h2></a>
+                        </li>
+                        <li class="nav-item active ">
+                            <a class="nav-link" href="{{ path('app_quiz_new') }}"><h2 class="text-white">New quiz</h2></a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="nav-item dropdown active my-2 my-lg-0 col-lg-4">
+                    {% if is_granted('ROLE_USER') %}
+                        <a class="nav-link text-white" href="{{ path('app_logout') }}"><h2>Log out</h2></a>
+                    {% else %}
+                        <a class="nav-link text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><h2>Authorization</h2>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('app_login') }}">Already signed? Log in</a>
+                            <a class="dropdown-item" href="{{ path('app_register') }}">New around here? Sign up</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('app_reset_password', {'token': 'x'}) }}">Forgot password?</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        <div class="mx-auto text-center" style="background: whitesmoke;">
+
+            {{ form_start(selectForm) }}
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button type="button" class="btn" id="block"><img src="{{ asset('svg/lock.svg') }}" alt="block"></button>
+                    <button type="button" class="btn" id="unblock"><img src="{{ asset('svg/unlock.svg') }}" alt="unblock"></button>
+                    <button type="button" class="btn" id="delete"><img src="{{ asset('svg/trash.svg') }}" alt="delete"></button>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="checkbox custom-control-input" id="selectAll" checked>
+                            <label class="custom-control-label" for="selectAll"></label>
+                        </div>
+                    </th>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Registration date</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for user in users  %}
+                    <tr>
+                        <td>
+                            {{ form_widget(selectForm.selectedUsers.children[user.id]) }}
+                        </td>
+
+                        <th scope="row">{{ user.id }}</th>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.registrationDate }}</td>
+                        <td>{% if user.isBlocked %} Blocked
+                            {% elseif user.verified %} Active
+                            {% else %} Inactive
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {{ form_end(selectForm) }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    {% block javascripts %}
+        <script src="{{ asset('js/users.js')}}"></script>
+    {% endblock %}
+{% endblock %}

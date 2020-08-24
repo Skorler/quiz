@@ -53,6 +53,11 @@ class User implements UserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isBlocked;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,9 +143,9 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRegistrationDate(): ?\DateTimeInterface
+    public function getRegistrationDate(): string
     {
-        return $this->registration_date;
+        return $this->registration_date->format('Y-m-d H:i:s');
     }
 
     public function setRegistrationDate(\DateTimeInterface $registration_date): self
@@ -172,5 +177,17 @@ class User implements UserInterface
     public function __toString() : String
     {
         return $this->username;
+    }
+
+    public function getIsBlocked(): ?bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(bool $isBlocked): self
+    {
+        $this->isBlocked = $isBlocked;
+
+        return $this;
     }
 }
