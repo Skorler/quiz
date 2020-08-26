@@ -27,10 +27,10 @@
                     <a class="nav-link text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><h2>Authorization</h2>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ path('app_login') }}">Already signed? Log in</a>
+                        <a class="dropdown-item" href="{{ path('app_login') }}">Already signed? Sign in</a>
                         <a class="dropdown-item" href="{{ path('app_register') }}">New around here? Sign up</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ path('app_reset_password', {'token': 'x'}) }}">Forgot password?</a>
+                        <a class="dropdown-item" href="{{ path('app_forgot_password_request', {'token': 'x'}) }}">Forgot password?</a>
                     </div>
                     {% endif %}
                 </div>
