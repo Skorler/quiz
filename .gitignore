@@ -11,6 +11,7 @@
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
+.phpcs-cache
 .phpunit
 .phpunit.result.cache
 /phpunit.xml
