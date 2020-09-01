@@ -1,21 +1,26 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
     $("#selectAll").change(function () {
         $("input:checkbox").prop('checked', $(this).prop("checked"));
     });
 
-    $("#block").on("click", function(e){
+    $("#block").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "delete_form"]').prop('selectedUsers', "/table/block").submit();
+        $('form[name = "select_form"]').attr('action', "/admin/users/block").submit();
     });
 
-    $("#unblock").on("click", function(e){
+    $("#unblock").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "delete_form"]').attr('selectedUsers', '/table/unblock').submit();
+        $('form[name = "select_form"]').attr('action', '/admin/users/unblock').submit();
     });
 
-    $("#delete").on("click", function(e){
+    $("#delete").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "delete_form"]').attr('selectedUsers', "/table/delete").submit();
+        $('form[name = "select_form"]').attr('action', "/admin/users/delete").submit();
+    });
+
+    $("#activate").on("click", function (e) {
+        e.preventDefault();
+        $('form[name = "select_form"]').attr('action', "/admin/users/activate").submit();
     });
 });
