@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,43 +22,48 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $registration_date;
+    private \DateTime $registration_date;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isBlocked;
+    private ?bool $isBlocked;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Progress::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $progresses;
 
     public function getId(): ?int
     {
@@ -172,6 +179,7 @@ class User implements UserInterface
         if (empty($this->registration_date)) {
             $this->registration_date = new \DateTime();
         }
+        $this->progresses = new ArrayCollection();
     }
 
     public function __toString() : String
@@ -187,6 +195,37 @@ class User implements UserInterface
     public function setIsBlocked(bool $isBlocked): self
     {
         $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Progress[]
+     */
+    public function getProgresses(): Collection
+    {
+        return $this->progresses;
+    }
+
+    public function addProgress(Progress $progress): self
+    {
+        if (!$this->progresses->contains($progress)) {
+            $this->progresses[] = $progress;
+            $progress->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProgress(Progress $progress): self
+    {
+        if ($this->progresses->contains($progress)) {
+            $this->progresses->removeElement($progress);
+            // set the owning side to null (unless already changed)
+            if ($progress->getUser() === $this) {
+                $progress->setUser(null);
+            }
+        }
 
         return $this;
     }

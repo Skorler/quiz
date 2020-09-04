@@ -31,9 +31,20 @@ class Question
      */
     private ArrayCollection $answers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Quiz::class, inversedBy="questions")
+     */
+    private ArrayCollection $quiz;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserAnswer::class, mappedBy="question", cascade={"persist", "remove"})
+     */
+    private ?UserAnswer $userAnswer;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->quiz = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,6 +90,49 @@ class Question
             if ($answer->getQuestion() === $this) {
                 $answer->setQuestion(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Quiz[]
+     */
+    public function getQuiz(): Collection
+    {
+        return $this->quiz;
+    }
+
+    public function addQuiz(Quiz $quiz): self
+    {
+        if (!$this->quiz->contains($quiz)) {
+            $this->quiz[] = $quiz;
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): self
+    {
+        if ($this->quiz->contains($quiz)) {
+            $this->quiz->removeElement($quiz);
+        }
+
+        return $this;
+    }
+
+    public function getUserAnswer(): ?UserAnswer
+    {
+        return $this->userAnswer;
+    }
+
+    public function setUserAnswer(UserAnswer $userAnswer): self
+    {
+        $this->userAnswer = $userAnswer;
+
+        // set the owning side of the relation if necessary
+        if ($userAnswer->getQuestion() !== $this) {
+            $userAnswer->setQuestion($this);
         }
 
         return $this;
