@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class QuestionController extends AbstractController
 {
     /**
-     * @Route("/question/{slug}", name="question")
+     * @Route("/{quiz}/question/{slug}", name="question")
      */
     public function showQuestion($slug) : Response
     {

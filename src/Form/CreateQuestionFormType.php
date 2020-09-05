@@ -1,34 +1,34 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Answer;
+use App\Entity\Question;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SelectFormType extends AbstractType
+class CreateQuestionFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $this->users = $options['users'];
         $builder
-            ->add('selectedUsers', EntityType::class, [
-                'class' => User::class,
+            ->add('text')
+            ->add('quiz')
+            ->add('userAnswer')
+            ->add('correctAnswer', EntityType::class, [
+                'class' => Answer::class,
                 'expanded' => true,
-                'multiple' => true,
-                'choices' =>$this->users
+                'multiple' => false
             ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'users' => null
+            'data_class' => Question::class,
         ]);
     }
 }

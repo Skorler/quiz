@@ -60,11 +60,13 @@ class UsersController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $temp = $request->get('select_form');
         $usersToBeUnblocked = $temp["selectedUsers"];
+
         foreach ($usersToBeUnblocked as $id) {
             $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
             $user->setIsBlocked(false);
             $entityManager->flush();
         }
+
         return $this->redirectToRoute('app_users');
     }
 

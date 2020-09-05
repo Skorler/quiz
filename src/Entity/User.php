@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $registration_date;
+    private \DateTime $registrationDate;
 
     /**
      * @ORM\Column(type="boolean")
@@ -152,12 +152,12 @@ class User implements UserInterface
 
     public function getRegistrationDate(): string
     {
-        return $this->registration_date->format('Y-m-d H:i:s');
+        return $this->registrationDate->format('Y-m-d H:i:s');
     }
 
-    public function setRegistrationDate(\DateTimeInterface $registration_date): self
+    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
     {
-        $this->registration_date = $registration_date;
+        $this->registrationDate = $registrationDate;
 
         return $this;
     }
@@ -176,8 +176,8 @@ class User implements UserInterface
 
     public function __construct()
     {
-        if (empty($this->registration_date)) {
-            $this->registration_date = new \DateTime();
+        if (empty($this->registrationDate)) {
+            $this->registrationDate = new \DateTime();
         }
         $this->progresses = new ArrayCollection();
     }
