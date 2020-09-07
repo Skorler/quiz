@@ -31,6 +31,8 @@ class CreateQuestionController extends AbstractController
             }
             $entityManager->persist($question);
             $entityManager->flush();
+
+            return $this->redirectToRoute('create_question');
         }
 
         return $this->render('question/create_question.twig', [
