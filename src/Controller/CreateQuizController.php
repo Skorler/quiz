@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class QuizController extends AbstractController
+class CreateQuizController extends AbstractController
 {
     /**
      * @Route("/admin/new_quiz", name="app_quiz_new")

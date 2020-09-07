@@ -43,20 +43,15 @@ class Progress
     private ?\DateTimeInterface $end_date;
 
     /**
-     * @ORM\Column(type="time")
-     */
-    private ?\DateTimeInterface $spent_time;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="progresses")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\OneToMany(targetEntity=UserAnswer::class, mappedBy="progress", orphanRemoval=true)
      */
-    private $userAnswers;
+    private ArrayCollection $userAnswers;
 
     public function __construct()
     {
@@ -112,18 +107,6 @@ class Progress
     public function setEndDate(\DateTimeInterface $end_date): self
     {
         $this->end_date = $end_date;
-
-        return $this;
-    }
-
-    public function getSpentTime(): ?\DateTimeInterface
-    {
-        return $this->spent_time;
-    }
-
-    public function setSpentTime(\DateTimeInterface $spent_time): self
-    {
-        $this->spent_time = $spent_time;
 
         return $this;
     }
