@@ -29,12 +29,12 @@ class Question
     /**
      * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="question", orphanRemoval=true)
      */
-    private ArrayCollection $answers;
+    private Collection $answers;
 
     /**
      * @ORM\ManyToMany(targetEntity=Quiz::class, inversedBy="questions")
      */
-    private ArrayCollection $quiz;
+    private Collection $quiz;
 
     /**
      * @ORM\OneToOne(targetEntity=UserAnswer::class, mappedBy="question", cascade={"persist", "remove"})
@@ -94,6 +94,7 @@ class Question
 
         return $this;
     }
+
 
     /**
      * @return Collection|Quiz[]
