@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Control panel{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/lib/jqeury-datatables.css') }}">
+<link rel="stylesheet" href="{{ asset('css/control.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto my-auto">
+        {% include 'navbar.html.twig' %}
+        <div class="mx-0 text-center " style="width: 100%; background: whitesmoke;">
+            {{ form_start(createQuizForm) }}
+            <h2 class="text-center pt-3 pb-3">Quiz:<span class="pl-5">{{ form_row(createQuizForm.name) }}</span></h2>
+            <div class="mt-1 mb-2 d-flex" style="background-color: #343a40; height: 5%; width: 100%">
+                <div class="col-lg-1"></div>
+                <span class="text-white col-lg-9 text-left" style="font-size: 20px">Available questions</span>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="checkbox custom-control-input" id="selectAll" checked>
+                            <label class="custom-control-label" for="selectAll"></label>
+                        </div>
+                    </th>
+                    <th scope="col">#</th>
+                    <th scope="col">Text</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for question in questions  %}
+                    <tr>
+                        <td>
+                            {{ form_widget(createQuizForm.questions.children[question.id]) }}
+                        </td>
+
+                        <th scope="row">{{ question.id }}</th>
+                        <td>{{ question.text }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="mt-1 mb-2 d-flex" style="background-color: #343a40; height: 5%; width: 100%">
+                <div class="col-lg-1"></div>
+                <span class="text-white col-lg-6 text-left" style="font-size: 20px">Currently not included questions</span>
+                <div class="col-lg-1"></div>
+                <button type="submit" class="btn btn-primary" id="create">Create quiz</button>
+                <a href="{{ path('create_question') }}" type="button" id="btn2" class="btn btn-primary col-lg-2 text-center" style="height: 100%;">New question</a>
+            </div>
+            {{ form_rest(createQuizForm) }}
+            {{ form_end(createQuizForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/check_all_button.js') }}"></script>
+{% endblock %}
