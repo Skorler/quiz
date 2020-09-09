@@ -34,17 +34,20 @@ class Quiz
     /**
      * @ORM\ManyToMany(targetEntity=Question::class, mappedBy="quiz")
      */
-    private ArrayCollection $questions;
+    private Collection $questions;
 
     /**
      * @ORM\OneToMany(targetEntity=Progress::class, mappedBy="quiz", orphanRemoval=true)
      */
-    private ArrayCollection $progresses;
+    private Collection $progresses;
 
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->progresses = new ArrayCollection();
+        if (empty($this->isActive)) {
+            $this->isActive = true;
+        }
     }
 
     public function getId(): ?int

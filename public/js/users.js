@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-    $("#selectAll").change(function () {
-        $("input:checkbox").prop('checked', $(this).prop("checked"));
-    });
-
     $("#block").on("click", function (e) {
         e.preventDefault();
         $('form[name = "select_form"]').attr('action', "/admin/users/block").submit();

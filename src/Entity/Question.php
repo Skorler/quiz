@@ -47,6 +47,11 @@ class Question
         $this->quiz = new ArrayCollection();
     }
 
+    public function __toString() : String
+    {
+        return $this->text;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
