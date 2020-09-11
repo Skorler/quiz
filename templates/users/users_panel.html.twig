@@ -42,7 +42,6 @@
                         <td>
                             {{ form_widget(selectForm.selectedUsers.children[user.id]) }}
                         </td>
-
                         <th scope="row">{{ user.id }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
@@ -54,12 +53,12 @@
                         </td>
                     </tr>
                 {% endfor %}
-                {{ form_end(selectForm) }}
                 </tbody>
             </table>
             <div class="navbar-dark bg-dark position-sticky" style=" background: whitesmoke; padding-left: 750px; padding-top: 12px; padding-bottom: 12px">
                 {{ knp_pagination_render(users) }}
             </div>
+                {{ form_end(selectForm) }}
         </div>
     </div>
     {% endif %}

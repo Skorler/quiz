@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\SelectFormType;
+use App\Form\SelectUsersType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +25,9 @@ class UsersController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(User::class);
         $users = $repository->findAll();
+
+        $form = $this->createForm(SelectUsersType::class, null, [
+            'users' => $users,
         $paginationUsers = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
@@ -36,7 +39,6 @@ class UsersController extends AbstractController
         return $this->render('users/users_panel.html.twig', [
             'users' => $paginationUsers,
             'selectForm' => $form->createView()
-
         ]);
     }
 //        if ($form->isSubmitted() && $form->isValid()) {
