@@ -42,7 +42,6 @@
                         <td>
                             {{ form_widget(selectForm.selectedUsers.children[user.id]) }}
                         </td>
-
                         <th scope="row">{{ user.id }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
@@ -54,9 +53,9 @@
                         </td>
                     </tr>
                 {% endfor %}
-                {{ form_end(selectForm) }}
                 </tbody>
             </table>
+            {{ form_end(selectForm) }}
         </div>
     </div>
     {% endif %}

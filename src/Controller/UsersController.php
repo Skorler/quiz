@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\SelectFormType;
+use App\Form\SelectUsersType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ class UsersController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(User::class);
         $users = $repository->findAll();
 
-        $form = $this->createForm(SelectFormType::class, null, [
+        $form = $this->createForm(SelectUsersType::class, null, [
             'users' => $users,
         ]);
 //        if ($form->isSubmitted() && $form->isValid()) {
