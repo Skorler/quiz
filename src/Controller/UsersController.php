@@ -10,34 +10,47 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class UsersController extends AbstractController
 {
     /**
      * @Route("/admin/users", name="app_users")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return Response
      */
-    public function show(Request $request) : Response
+    public function show(Request $request, PaginatorInterface $paginator) : Response
     {
-        $repository = $this->getDoctrine()->getRepository(User::class);
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $entityManager->getRepository(User::class);
         $users = $repository->findAll();
 
         $form = $this->createForm(SelectUsersType::class, null, [
             'users' => $users,
+        $paginationUsers = $paginator->paginate(
+            $users,
+            $request->query->getInt('page', 1),
+            10
+        );
+        $form = $this->createForm(SelectFormType::class, null, [
+            'users' => $paginationUsers,
         ]);
+        return $this->render('users/users_panel.html.twig', [
+            'users' => $paginationUsers,
+            'selectForm' => $form->createView()
+        ]);
+    }
 //        if ($form->isSubmitted() && $form->isValid()) {
 //            return $this->forward('App\Controller\UsersController', [
 //                'selectedUsers' => $form->get('selectedUsers')
 //            ]);
 //        }
 
-        return $this->render('users/users_panel.html.twig', [
-            'users'=> $users,
-            'selectForm' => $form->createView()
-        ]);
-    }
-
     /**
      * @Route("/admin/users/block", name="app_block")
+     * @param Request $request
+     * @return Response
      */
     public function block(Request $request) : Response
     {
@@ -54,6 +67,8 @@ class UsersController extends AbstractController
 
     /**
      * @Route("/admin/users/unblock", name="app_unblock")
+     * @param Request $request
+     * @return Response
      */
     public function unblock(Request $request) : Response
     {
@@ -72,6 +87,8 @@ class UsersController extends AbstractController
 
     /**
      * @Route("/admin/users/delete", name="app_delete")
+     * @param Request $request
+     * @return Response
      */
     public function delete(Request $request) : Response
     {
@@ -88,6 +105,8 @@ class UsersController extends AbstractController
 
     /**
      * @Route("/admin/users/activate", name="app_activate")
+     * @param Request $request
+     * @return Response
      */
     public function activate(Request $request) : Response
     {
