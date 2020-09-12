@@ -35,12 +35,12 @@ class Progress
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTimeInterface $start_date;
+    private ?\DateTimeInterface $startDate;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTimeInterface $end_date;
+    private ?\DateTimeInterface $endDate;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="progresses")
@@ -51,7 +51,12 @@ class Progress
     /**
      * @ORM\OneToMany(targetEntity=UserAnswer::class, mappedBy="progress", orphanRemoval=true)
      */
-    private ArrayCollection $userAnswers;
+    private Collection $userAnswers;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Question::class, cascade={"persist", "remove"})
+     */
+    private ?Question $lastQuestion;
 
     public function __construct()
     {
@@ -89,24 +94,24 @@ class Progress
 
     public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->start_date;
+        return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): self
+    public function setStartDate(\DateTimeInterface $startDate): self
     {
-        $this->start_date = $start_date;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
     public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->end_date;
+        return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $end_date): self
+    public function setEndDate(\DateTimeInterface $endDate): self
     {
-        $this->end_date = $end_date;
+        $this->endDate = $endDate;
 
         return $this;
     }
@@ -150,6 +155,18 @@ class Progress
                 $userAnswer->setProgress(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLastQuestion(): ?Question
+    {
+        return $this->lastQuestion;
+    }
+
+    public function setLastQuestion(?Question $lastQuestion): self
+    {
+        $this->lastQuestion = $lastQuestion;
 
         return $this;
     }

@@ -63,7 +63,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Progress::class, mappedBy="user", orphanRemoval=true)
      */
-    private $progresses;
+    private Collection $progresses;
 
     public function getId(): ?int
     {

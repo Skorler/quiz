@@ -20,7 +20,7 @@ class QuizRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Quiz[] Returns an array of Quiz objects
+    //  * @return QuizController[] Returns an array of QuizController objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class QuizRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Quiz
+    public function findOneBySomeField($value): ?QuizController
     {
         return $this->createQueryBuilder('q')
             ->andWhere('q.exampleField = :val')
