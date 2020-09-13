@@ -10,13 +10,22 @@ use App\Entity\Quiz;
 use App\Entity\UserAnswer;
 use App\Form\CreateQuizFormType;
 use App\Form\UserAnswerFormType;
+use App\Service\Question\QuestionManager;
+use App\Service\Quiz\QuizManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\String\u;
 
-class QuizController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+class QuizController extends AbstractController
 {
+    private QuizManager $quizManager;
+
+    public function __construct(QuizManager $quizManager)
+    {
+        $this->quizManager = $quizManager;
+    }
+
     /**
      * @Route("/admin/quiz/activate/{slug}", name="quiz_activate")
      * @param Request $request
@@ -24,27 +33,7 @@ class QuizController extends \Symfony\Bundle\FrameworkBundle\Controller\Abstract
      */
     public function activate(Request $request, $slug) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $slug]);
-        $quiz->setIsActive(true);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_home');
-    }
-
-    /**
-     * @Route("/admin/quiz/delete/{slug}", name="quiz_deactivate")
-     * @param Request $request
-     * @return Response
-     */
-    public function delete(Request $request, $slug) : Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $slug]);
-        $entityManager->remove($quiz);
-        $entityManager->flush();
+        $this->quizManager->activate($slug);
 
         return $this->redirectToRoute('app_home');
     }
@@ -56,11 +45,19 @@ class QuizController extends \Symfony\Bundle\FrameworkBundle\Controller\Abstract
      */
     public function deactivate(Request $request, $slug) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $slug]);
-        $quiz->setIsActive(false);
-        $entityManager->flush();
+        $this->quizManager->deactivate($slug);
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    /**
+     * @Route("/admin/quiz/delete/{slug}", name="quiz_deactivate")
+     * @param Request $request
+     * @return Response
+     */
+    public function delete(Request $request, $slug) : Response
+    {
+        $this->quizManager->delete($slug);
 
         return $this->redirectToRoute('app_home');
     }
@@ -70,15 +67,11 @@ class QuizController extends \Symfony\Bundle\FrameworkBundle\Controller\Abstract
      * @param Request $request
      * @return Response
      */
-    public function edit(Request $request, $slug) : Response
+    public function edit(Request $request, $slug, QuestionManager $questionManager) : Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-
-        $repository = $this->getDoctrine()->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $slug]);
-
-        $repository = $this->getDoctrine()->getRepository(Question::class);
-        $questions = $repository->findAll();
+        $quiz = $this->quizManager->findById($slug);
+        $questions = $questionManager->getAllQuestions();
 
         $form = $this->createForm(CreateQuizFormType::class, $quiz, [
             'questions' => $questions

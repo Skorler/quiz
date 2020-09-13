@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Form\CreateQuizFormType;
+use App\Service\Quiz\QuizManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class CreateQuizController extends AbstractController
     /**
      * @Route("/admin/new_quiz", name="app_quiz_new")
      */
-    public function show(Request $request) : Response
+    public function show(Request $request, QuizManager $quizManager) : Response
     {
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findAll();
@@ -29,10 +30,7 @@ class CreateQuizController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $quiz->setIsActive(true);
-            $entityManager->persist($quiz);
-            $entityManager->flush();
+            $quizManager->create($quiz);
 
             return $this->redirectToRoute('app_home');
         }
