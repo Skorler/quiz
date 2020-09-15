@@ -93,18 +93,22 @@ class QuizController extends AbstractController
 
 
     /**
-     * @Route("/quiz/play/{id}/{slug}", name="quiz_play")
+     * @Route("/quiz/play/{quizId}", name="quiz_play")
      * @param Request $request
      * @return Response
      */
-    public function play(Request $request, $id, $slug) : Response
+    public function play(Request $request, $quizId) : Response
     {
+        $user = $this->getUser();
+
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $id]);
+        $quiz = $repository->findOneBy(['id' => $quizId]);
+
+        if ($user->)
 
         $repository = $entityManager->getRepository(Question::class);
-        $question = $repository->findOneBy(['quiz' => $quiz, 'id' => $slug]);
+        $question = $repository->findOneBy(['quiz' => $quizId, 'id' => $slug]);
 
         $userAnswer = new UserAnswer();
         $form = $this->createForm(UserAnswerFormType::class, $userAnswer);

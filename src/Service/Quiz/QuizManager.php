@@ -4,51 +4,51 @@ declare(strict_types=1);
 
 namespace App\Service\Quiz;
 
-
-use App\Entity\Question;
 use App\Entity\Quiz;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\QuizRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
 
 class QuizManager
 {
     private EntityManagerInterface $entityManager;
+    private QuizRepository $quizRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, QuizRepository $quizRepository)
     {
         $this->entityManager = $entityManager;
+        $this->quizRepository = $quizRepository;
     }
 
-    public function create(Quiz $quiz)
+    public function create(Quiz $quiz) : void
     {
         $quiz->setIsActive(true);
         $this->entityManager->persist($quiz);
         $this->entityManager->flush();
     }
 
-    public function activate(Integer $slug)
+    public function activate(int $slug) : void
     {
-        $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['id' => $slug]);
-        $quiz->setIsActive(true);
+        $quiz = $this->quizRepository->find($slug);
+        $quiz->Activate();
         $this->entityManager->flush();
     }
 
-    public function deactivate(Integer $slug)
+    public function deactivate(int $slug) : void
     {
-        $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['id' => $slug]);
-        $quiz->setIsActive(false);
+        $quiz = $this->quizRepository->find($slug);
+        $quiz->Deactivate();
         $this->entityManager->flush();
     }
 
-    public function delete(Integer $slug)
+    public function delete(int $slug) : void
     {
-        $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['id' => $slug]);
+        $quiz = $this->quizRepository->find($slug);
         $this->entityManager->remove($quiz);
         $this->entityManager->flush();
     }
 
-    public function findById(Integer $slug) : Quiz
+    public function findById(int $slug) : Quiz
     {
         return $this->entityManager->getRepository(Quiz::class)->findOneBy(['id' => $slug]);
     }

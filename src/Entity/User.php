@@ -180,6 +180,7 @@ class User implements UserInterface
             $this->registrationDate = new \DateTime();
         }
         $this->progresses = new ArrayCollection();
+        $this->isBlocked = false;
     }
 
     public function __toString() : String
@@ -195,6 +196,27 @@ class User implements UserInterface
     public function setIsBlocked(bool $isBlocked): self
     {
         $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    public function Activate() :self
+    {
+        $this->isVerified = true;
+
+        return $this;
+    }
+
+    public function Block() :self
+    {
+        $this->isBlocked = true;
+
+        return $this;
+    }
+
+    public function Unblock() :self
+    {
+        $this->isBlocked = false;
 
         return $this;
     }
