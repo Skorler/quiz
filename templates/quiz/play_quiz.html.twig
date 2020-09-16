@@ -9,8 +9,11 @@
             <h2 class="text-center pt-3 pb-3">Quiz: {{ quiz.name }}</h2>
             <h3 class="text-center">Question: {{ question.text }}</h3>
             {{ form_start(userAnswerForm) }}
-            {% for answer in userAnswerForm.answer %}
-                {{ form_row() }}
+            {% for answer in answers %}
+                {{ form_row(userAnswerForm.answer.children[answer.id]) }}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" id="check">Check</button>
+            {{ form_rest(userAnswerForm) }}
             {{ form_end(userAnswerForm) }}
         </div>
     </div>

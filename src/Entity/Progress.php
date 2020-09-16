@@ -38,7 +38,7 @@ class Progress
     private ?\DateTimeInterface $startDate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private ?\DateTimeInterface $endDate;
 
@@ -61,6 +61,9 @@ class Progress
     public function __construct()
     {
         $this->userAnswers = new ArrayCollection();
+        $this->startDate = new \DateTime();
+        $this->isCompleted = false;
+        $this->endDate = null;
     }
 
     public function getId(): ?int

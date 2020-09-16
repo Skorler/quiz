@@ -176,10 +176,8 @@ class User implements UserInterface
 
     public function __construct()
     {
-        if (empty($this->registrationDate)) {
-            $this->registrationDate = new \DateTime();
-        }
         $this->progresses = new ArrayCollection();
+        $this->registrationDate = new \DateTime();
         $this->isBlocked = false;
     }
 

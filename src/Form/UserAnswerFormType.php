@@ -13,8 +13,14 @@ class UserAnswerFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->answers = $options['answers'];
         $builder
-            ->add('answer')
+            ->add('answer', EntityType::class, [
+                'class' => Answer::class,
+                'expanded' => true,
+                'multiple' => false,
+                'choices' =>$this->answers
+            ]);
         ;
     }
 
@@ -22,6 +28,7 @@ class UserAnswerFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserAnswer::class,
+            'answers' => null
         ]);
     }
 }

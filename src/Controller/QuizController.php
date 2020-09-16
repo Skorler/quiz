@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Progress;
 use App\Entity\Question;
 use App\Entity\Quiz;
@@ -31,7 +32,7 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function activate(Request $request, $slug) : Response
+    public function activate(Request $request, int $slug) : Response
     {
         $this->quizManager->activate($slug);
 
@@ -43,7 +44,7 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function deactivate(Request $request, $slug) : Response
+    public function deactivate(Request $request, int $slug) : Response
     {
         $this->quizManager->deactivate($slug);
 
@@ -55,7 +56,7 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function delete(Request $request, $slug) : Response
+    public function delete(Request $request, int $slug) : Response
     {
         $this->quizManager->delete($slug);
 
@@ -67,7 +68,7 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(Request $request, $slug, QuestionManager $questionManager) : Response
+    public function edit(Request $request, int $slug, QuestionManager $questionManager) : Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $quiz = $this->quizManager->findById($slug);
@@ -97,28 +98,52 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function play(Request $request, $quizId) : Response
+    public function play(Request $request,int $quizId) : Response
     {
         $user = $this->getUser();
 
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $entityManager->getRepository(Quiz::class);
-        $quiz = $repository->findOneBy(['id' => $quizId]);
+        $quiz = $repository->find($quizId);
 
-        if ($user->)
+        $repository = $entityManager->getRepository(Progress::class);
+        $progress = $repository->findOneBy(['quiz' => $quiz, 'user' => $user]);
+
+        if ($progress == null) {
+            $progress = new Progress();
+            $progress->setQuiz($quiz);
+            $progress->setUser($user);
+            $progress->setLastQuestion($quiz->getQuestions()[0]);
+        }
 
         $repository = $entityManager->getRepository(Question::class);
-        $question = $repository->findOneBy(['quiz' => $quizId, 'id' => $slug]);
+        $question = $repository->find($progress->getLastQuestion());
+
+        $repository = $entityManager->getRepository(Answer::class);
+        $answers = $repository->findBy(['question' => $question]);
 
         $userAnswer = new UserAnswer();
-        $form = $this->createForm(UserAnswerFormType::class, $userAnswer);
+        $form = $this->createForm(UserAnswerFormType::class, $userAnswer, [
+            'answers' => $answers
+        ]);
 
-        $progress = new Progress();
-        $progress->setStartDate(new \DateTime());
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userAnswer->setIsCorrect($userAnswer->getAnswer()->getIsCorrect());
+            $userAnswer->setProgress($progress);
+            $userAnswer->setQuestion($question);
+            $entityManager->persist($userAnswer);
+            $progress->setLastQuestion($progress->getLastQuestion()+1);
+            $entityManager->persist($progress);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('quiz_play');
+        }
 
         return $this->render('quiz/play_quiz.html.twig', [
             'question' => $question,
             'quiz' => $quiz,
+            'answers' => $answers,
             'userAnswerForm' => $form->createView()
         ]);
     }
