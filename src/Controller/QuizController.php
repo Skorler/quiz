@@ -94,7 +94,7 @@ class QuizController extends AbstractController
 
 
     /**
-     * @Route("/quiz/play/{quizId}", name="quiz_play")
+     * @Route("/{quizId}/play", name="quiz_play")
      * @param Request $request
      * @return Response
      */
@@ -113,11 +113,20 @@ class QuizController extends AbstractController
             $progress = new Progress();
             $progress->setQuiz($quiz);
             $progress->setUser($user);
-            $progress->setLastQuestion($quiz->getQuestions()[0]);
+            $progress->setQuestionNumber(0);
+            $progress->setLastQuestion($quiz->getQuestions()[$progress->getQuestionNumber()]);
         }
 
         $repository = $entityManager->getRepository(Question::class);
-        $question = $repository->find($progress->getLastQuestion());
+        $question = $repository->findOneBy(['id' => $progress->getLastQuestion()]);
+        if ($question == null) {
+            $progress->setIsCompleted(true);
+            $progress->setEndDate(new \DateTime());
+
+            return $this->redirectToRoute('quiz_top', [
+                'quizId' => $quizId
+            ]);
+        }
 
         $repository = $entityManager->getRepository(Answer::class);
         $answers = $repository->findBy(['question' => $question]);
@@ -133,11 +142,14 @@ class QuizController extends AbstractController
             $userAnswer->setProgress($progress);
             $userAnswer->setQuestion($question);
             $entityManager->persist($userAnswer);
-            $progress->setLastQuestion($progress->getLastQuestion()+1);
+            $progress->setQuestionNumber($progress->getQuestionNumber()+1);
+            $progress->setLastQuestion($quiz->getQuestions()[$progress->getQuestionNumber()]);
             $entityManager->persist($progress);
             $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_play');
+            return $this->redirectToRoute('quiz_play', [
+                'quizId' => $quizId
+            ]);
         }
 
         return $this->render('quiz/play_quiz.html.twig', [
@@ -146,5 +158,17 @@ class QuizController extends AbstractController
             'answers' => $answers,
             'userAnswerForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/{quizId}/top", name="quiz_top")
+     * @param Request $request
+     * @return Response
+     */
+    public function top(Request $request)
+    {
+
+
+        return $this->render('rating/showRating.html.twig');
     }
 }

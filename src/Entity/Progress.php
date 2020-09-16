@@ -58,6 +58,11 @@ class Progress
      */
     private ?Question $lastQuestion;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private ?int $questionNumber;
+
     public function __construct()
     {
         $this->userAnswers = new ArrayCollection();
@@ -170,6 +175,18 @@ class Progress
     public function setLastQuestion(?Question $lastQuestion): self
     {
         $this->lastQuestion = $lastQuestion;
+
+        return $this;
+    }
+
+    public function getQuestionNumber(): ?int
+    {
+        return $this->questionNumber;
+    }
+
+    public function setQuestionNumber(int $questionNumber): self
+    {
+        $this->questionNumber = $questionNumber;
 
         return $this;
     }

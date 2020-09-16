@@ -50,6 +50,6 @@ class QuizManager
 
     public function findById(int $slug) : Quiz
     {
-        return $this->entityManager->getRepository(Quiz::class)->findOneBy(['id' => $slug]);
+        return $this->quizRepository->find($slug);
     }
 }
