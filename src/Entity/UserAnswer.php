@@ -26,12 +26,6 @@ class UserAnswer
     private ?Progress $progress;
 
     /**
-     * @ORM\OneToOne(targetEntity=Question::class, inversedBy="userAnswer", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?Question $question;
-
-    /**
      * @ORM\OneToOne(targetEntity=Answer::class, cascade={"persist", "remove"})
      */
     private ?Answer $answer;
@@ -40,6 +34,12 @@ class UserAnswer
      * @ORM\Column(type="boolean")
      */
     private ?bool $isCorrect;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Question::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?Question $question;
 
     public function getId(): ?int
     {

@@ -11,6 +11,7 @@ use App\Entity\Quiz;
 use App\Entity\UserAnswer;
 use App\Form\CreateQuizFormType;
 use App\Form\UserAnswerFormType;
+use App\Form\UserAnswerResultFormType;
 use App\Service\Question\QuestionManager;
 use App\Service\Quiz\QuizManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -94,11 +95,11 @@ class QuizController extends AbstractController
 
 
     /**
-     * @Route("/{quizId}/play", name="quiz_play")
+     * @Route("/quiz/{quizId}/play", name="quiz_play")
      * @param Request $request
      * @return Response
      */
-    public function play(Request $request,int $quizId) : Response
+    public function play(Request $request, int $quizId) : Response
     {
         $user = $this->getUser();
 
@@ -115,6 +116,14 @@ class QuizController extends AbstractController
             $progress->setUser($user);
             $progress->setQuestionNumber(0);
             $progress->setLastQuestion($quiz->getQuestions()[$progress->getQuestionNumber()]);
+            $progress->setIsCompleted(false);
+        }
+
+        if ($progress->getIsCompleted() == true) {
+
+            return $this->redirectToRoute('quiz_top', [
+                'quizId' => $quizId
+            ]);
         }
 
         $repository = $entityManager->getRepository(Question::class);
@@ -122,6 +131,8 @@ class QuizController extends AbstractController
         if ($question == null) {
             $progress->setIsCompleted(true);
             $progress->setEndDate(new \DateTime());
+            $entityManager->persist($progress);
+            $entityManager->flush();
 
             return $this->redirectToRoute('quiz_top', [
                 'quizId' => $quizId
@@ -138,17 +149,32 @@ class QuizController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $userAnswer->setIsCorrect($userAnswer->getAnswer()->getIsCorrect());
             $userAnswer->setProgress($progress);
             $userAnswer->setQuestion($question);
+            $userAnswer->setIsCorrect($userAnswer->getAnswer()->getIsCorrect());
+            if ($userAnswer->getIsCorrect() == true) {
+                $this->addFlash(
+                    'notice',
+                    'Your answer was correct!'
+                );
+            }
+            else {
+                $this->addFlash(
+                    'notice',
+                    'Your answer was wrong!'
+                );
+            }
             $entityManager->persist($userAnswer);
             $progress->setQuestionNumber($progress->getQuestionNumber()+1);
             $progress->setLastQuestion($quiz->getQuestions()[$progress->getQuestionNumber()]);
             $entityManager->persist($progress);
             $entityManager->flush();
 
-            return $this->redirectToRoute('quiz_play', [
-                'quizId' => $quizId
+            return $this->render('quiz/play_quiz.html.twig', [
+                'question' => $question,
+                'quiz' => $quiz,
+                'answers' => $answers,
+                'userAnswerForm' => $form->createView()
             ]);
         }
 
@@ -160,15 +186,26 @@ class QuizController extends AbstractController
         ]);
     }
 
+
     /**
-     * @Route("/{quizId}/top", name="quiz_top")
+     * @Route("/quiz/{quizId}/top", name="quiz_top")
      * @param Request $request
      * @return Response
      */
-    public function top(Request $request)
+    public function top(Request $request, int $quizId)
     {
+        $user = $this->getUser();
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $repository = $entityManager->getRepository(Progress::class);
+        $progresses = $repository->findBy(['quiz' => $quizId, 'isCompleted' => true]);
 
 
-        return $this->render('rating/showRating.html.twig');
+
+        return $this->render('rating/showRating.html.twig', [
+            'progresses' => $progresses,
+            'current_user' => $user
+        ]);
     }
 }
