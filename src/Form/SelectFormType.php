@@ -12,6 +12,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SelectFormType extends AbstractType
 {
+    /**
+     * @var mixed
+     */
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
