@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\SelectUsersType;
+use App\Form\SelectFormType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,19 +22,27 @@ class UsersController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function show(Request $request, PaginatorInterface $paginator) : Response
+    public function show(Request $request, PaginatorInterface $paginator)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $repository = $entityManager->getRepository(User::class);
-        $users = $repository->findAll();
-
-        $form = $this->createForm(SelectUsersType::class, null, [
-            'users' => $users,
+        $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u');
+        if ($request->query->getAlnum('filter')) {
+            $queryBuilder
+                ->where('u.id LIKE :id')
+                ->setParameter('id', '%' . $request->query->getAlnum('filter') . '%');
+        }
+        $query = $queryBuilder->getQuery();
+        //$users = $repository->findAll();
+        //dump($users);
+       // $id = $request->query->get('u');
+        //$users = $userRepository->findUserData($id);
+        //dump($userRepository->findUserData());
         $paginationUsers = $paginator->paginate(
-            $users,
+            $query,
             $request->query->getInt('page', 1),
             10
         );
+
         $form = $this->createForm(SelectFormType::class, null, [
             'users' => $paginationUsers,
         ]);

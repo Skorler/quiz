@@ -6,7 +6,10 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use http\Env\Response;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,6 +29,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @param UserInterface $user
+     * @param string $newEncodedPassword
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
@@ -38,11 +45,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function createQueryBuilber(string $string)
+    {
+    }
+
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    /*public function findUserData()
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->select('u')
+            ->from('User', 'u');
+          // ->setParameter('userId', $id);
+
+        dump($this->createQueryBuilder('u')->select('u')->from('User', 'u')->getQuery()->execute());
+
+        return ($qb->getQuery()->execute());
+    }
+*/
+
+
+ /*   public function findByExampleField($value)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.exampleField = :val')
@@ -53,8 +78,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
-    */
-
+*/
     /*
     public function findOneBySomeField($value): ?User
     {
