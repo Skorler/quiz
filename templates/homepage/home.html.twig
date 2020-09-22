@@ -30,15 +30,15 @@
                         <td>
                             {% if is_granted('ROLE_ADMIN') %}
                                 {% if quiz.isActive %}
-                                    <a href="" class="btn btn-primary">Deactivate</a>
+                                    <a href="/admin/quiz/deactivate/{{ quiz.id }}" class="btn btn-primary">Deactivate</a>
                                 {% else %}
-                                    <a href="" class="btn btn-primary">Activate</a>
+                                    <a href="/admin/quiz/activate/{{ quiz.id }}" class="btn btn-primary">Activate</a>
                                 {% endif %}
-                                <a href="" class="btn btn-primary">Delete</a>
-                                <a href="" class="btn btn-primary">Edit</a>
+                                <a href="/admin/quiz/delete/{{ quiz.id }}" class="btn btn-primary">Delete</a>
+                                <a href="/admin/quiz/edit/{{ quiz.id }}" class="btn btn-primary">Edit</a>
                             {% endif %}
-                            <a href="" class="btn btn-primary">Play</a>
-                            <a href="" class="btn btn-primary">Top</a>
+                            <a href="/quiz/{{ quiz.id }}/play" class="btn btn-primary">Start</a>
+                            <a href="/quiz/{{ quiz.id }}/top" class="btn btn-primary">Top</a>
                         </td>
 
                     </tr>

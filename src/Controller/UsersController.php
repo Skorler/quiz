@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\SelectFormType;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\SelectUsersType;
+use App\Service\Users\UsersManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +15,13 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class UsersController extends AbstractController
 {
+    private UsersManager $usersManager;
+
+    public function __construct(UsersManager $usersManager)
+    {
+        $this->usersManager = $usersManager;
+    }
+
     /**
      * @Route("/admin/users", name="app_users")
      * @param Request $request
@@ -32,30 +38,22 @@ class UsersController extends AbstractController
                 ->setParameter('id', '%' . $request->query->getAlnum('filter') . '%');
         }
         $query = $queryBuilder->getQuery();
-        //$users = $repository->findAll();
-        //dump($users);
-       // $id = $request->query->get('u');
-        //$users = $userRepository->findUserData($id);
-        //dump($userRepository->findUserData());
+
+        $users = $this->usersManager->getAllUsers();
         $paginationUsers = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
         );
-
-        $form = $this->createForm(SelectFormType::class, null, [
+        $form = $this->createForm(SelectUsersType::class, null, [
             'users' => $paginationUsers,
         ]);
+
         return $this->render('users/users_panel.html.twig', [
             'users' => $paginationUsers,
             'selectForm' => $form->createView()
         ]);
     }
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            return $this->forward('App\Controller\UsersController', [
-//                'selectedUsers' => $form->get('selectedUsers')
-//            ]);
-//        }
 
     /**
      * @Route("/admin/users/block", name="app_block")
@@ -64,14 +62,14 @@ class UsersController extends AbstractController
      */
     public function block(Request $request) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $temp = $request->get('select_form');
-        $usersToBeBlocked = $temp["selectedUsers"];
-        foreach ($usersToBeBlocked as $id) {
-            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
-            $user->setIsBlocked(true);
-            $entityManager->flush();
+        $form = $this->createForm(SelectUsersType::class, null);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $usersToBeDeleted = $form->getData()['selectedUsers'];
+            $this->usersManager->block($usersToBeDeleted);
         }
+
         return $this->redirectToRoute('app_users');
     }
 
@@ -82,14 +80,12 @@ class UsersController extends AbstractController
      */
     public function unblock(Request $request) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $temp = $request->get('select_form');
-        $usersToBeUnblocked = $temp["selectedUsers"];
+        $form = $this->createForm(SelectUsersType::class, null);
+        $form->handleRequest($request);
 
-        foreach ($usersToBeUnblocked as $id) {
-            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
-            $user->setIsBlocked(false);
-            $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $usersToBeDeleted = $form->getData()['selectedUsers'];
+            $this->usersManager->unblock($usersToBeDeleted);
         }
 
         return $this->redirectToRoute('app_users');
@@ -102,14 +98,14 @@ class UsersController extends AbstractController
      */
     public function delete(Request $request) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $temp = $request->get('select_form');
-        $usersToBeDeleted = $temp["selectedUsers"];
-        foreach ($usersToBeDeleted as $id) {
-            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
-            $entityManager->remove($user);
-            $entityManager->flush();
+        $form = $this->createForm(SelectUsersType::class, null);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $usersToBeDeleted = $form->getData()['selectedUsers'];
+            $this->usersManager->delete($usersToBeDeleted);
         }
+
         return $this->redirectToRoute('app_users');
     }
 
@@ -120,14 +116,14 @@ class UsersController extends AbstractController
      */
     public function activate(Request $request) : Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $temp = $request->get('select_form');
-        $usersToBeDeleted = $temp["selectedUsers"];
-        foreach ($usersToBeDeleted as $id) {
-            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
-            $user->setIsVerified(true);
-            $entityManager->flush();
+        $form = $this->createForm(SelectUsersType::class, null);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $usersToBeDeleted = $form->getData()['selectedUsers'];
+            $this->usersManager->activate($usersToBeDeleted);
         }
+
         return $this->redirectToRoute('app_users');
     }
 }

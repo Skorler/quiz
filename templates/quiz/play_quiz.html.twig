@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Playing quiz{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto my-auto">
+        {{ include('navbar.html.twig') }}
+        <div class="mx-0 text-center " style="width: 100%; background: whitesmoke;">
+            <h2 class="text-center pt-3 pb-3">Quiz: {{ quiz.name }}</h2>
+            <h3 class="text-center">Question: {{ question.text }}</h3>
+            {% for message in app.flashes('notice') %}
+                <div class="flash-notice">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {{ form_start(userAnswerForm) }}
+            {% for answer in answers %}
+                {{ form_row(userAnswerForm.answer.children[answer.id]) }}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" id="check">Check</button>
+            <a   href="/quiz/{{ quiz.id }}/play" class="btn btn-primary">Next question</a>
+            {{ form_rest(userAnswerForm) }}
+            {{ form_end(userAnswerForm) }}
+        </div>
+    </div>
+{% endblock %}

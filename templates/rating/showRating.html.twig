@@ -10,61 +10,50 @@
 {% block body %}
     <div class="container mx-auto my-auto">
         {% include 'navbar.html.twig' %}
-        <div class="col-lg-1"></div>
-        <h4 class="text-white"
-            style="text-align: center;">Rating</h4>
+        <div class="mx-0 text-center " style="width: 100%; background: whitesmoke;">
+            <h2 class="text-center">Rating</h2>
             <table id="included_questions" class="table table-bordered table-sm" cellspacing="0" style="width: 100%;">
-                <tr class="text-white col-lg-6 text-left" style="background-color: #343a40; height: 5%; width: 100%">
-                    <th class="th-sm">Position
-                    </th>
-                    <th class="th-sm">Name
-                    </th>
-                    <th class="th-sm">Score
-                    </th>
-                    <th class="th-sm">Time
-                    </th>
-                </tr>
+                <thead>
                 <tr>
-                    <td>1</td>
-                    <td>Tiger Nixon</td>
-                    <td>100%</td>
-                    <td>00:05:48</td>
+                    <th scope="col">Position</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Time</th>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Ashton Cox</td>
-                    <td>100%</td>
-                    <td>00:06:03</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Cedric Kelly</td>
-                    <td>80%</td>
-                    <td>00:05:01</td>
-                </tr>
-                <tr style="background-color: lightgrey">
-                    <td>23</td>
-                    <td>Brielle Williamson</td>
-                    <td>35%</td>
-                    <td>00:08:54</td>
-                </tr>
+                </thead>
+                <tbody>
+                {% for progress in progresses  %}
+                    <tr>
+                        {% if current_user == app.user %}
+                            <th style="background-color: darkgray" scope="row">asd</th>
+                            <td style="background-color: darkgray">{{ progress.user.username }}</td>
+                            <td style="background-color: darkgray">score</td>
+                            <td style="background-color: darkgray">
+                                {% set difference = date(progress.endDate).diff(date(progress.startDate)) %}
+                                {{ difference|date("%h:%i:%s") }}
+                            </td>
+                        {% else %}
+                            <th scope="row">asd</th>
+                            <td>{{ progress.user.username }}</td>
+                            <td>score</td>
+                            <td>
+                                {% set difference = date(progress.endDate).diff(date(progress.startDate)) %}
+                                {{ difference|date("%h:%i:%s") }}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
             </table>
             <div class="mt-1 mb-2 d-flex" style="background-color: #343a40; height: 5%; width: 100%">
                 <div class="col-lg-1"></div>
                 <span class="text-white col-lg-6 text-left" style="font-size: 20px">Try playing other quizzes</span>
                 <div class="col-lg-1"></div>
-                <input
-                    type="button" id="btn3"
-                    value="OK"
-                    class="btn btn-primary col-lg-1 text-center"
-                    style="height: 100%;">
+                <a class="btn btn-primary col-lg-1 text-center" href="{{ path('app_home') }}" style="height: 100%;">Home</a>
             </div>
-
         </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('js/lib/jqeury-datatables.js') }}"></script>
-    <script src="{{ asset('js/control.js') }}"></script>
 {% endblock %}

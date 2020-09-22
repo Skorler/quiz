@@ -36,11 +36,6 @@ class Question
      */
     private Collection $quiz;
 
-    /**
-     * @ORM\OneToOne(targetEntity=UserAnswer::class, mappedBy="question", cascade={"persist", "remove"})
-     */
-    private ?UserAnswer $userAnswer;
-
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -127,20 +122,4 @@ class Question
         return $this;
     }
 
-    public function getUserAnswer(): ?UserAnswer
-    {
-        return $this->userAnswer;
-    }
-
-    public function setUserAnswer(UserAnswer $userAnswer): self
-    {
-        $this->userAnswer = $userAnswer;
-
-        // set the owning side of the relation if necessary
-        if ($userAnswer->getQuestion() !== $this) {
-            $userAnswer->setQuestion($this);
-        }
-
-        return $this;
-    }
 }

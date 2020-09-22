@@ -2,21 +2,21 @@ $(document).ready(function () {
 
     $("#block").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "select_form"]').attr('action', "/admin/users/block").submit();
+        $('form[name = "select_users"]').attr('action', "/admin/users/block").submit();
     });
 
     $("#unblock").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "select_form"]').attr('action', '/admin/users/unblock').submit();
+        $('form[name = "select_users"]').attr('action', '/admin/users/unblock').submit();
     });
 
     $("#delete").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "select_form"]').attr('action', "/admin/users/delete").submit();
+        $('form[name = "select_users"]').attr('action', "/admin/users/delete").submit();
     });
 
     $("#activate").on("click", function (e) {
         e.preventDefault();
-        $('form[name = "select_form"]').attr('action', "/admin/users/activate").submit();
+        $('form[name = "select_users"]').attr('action', "/admin/users/activate").submit();
     });
 });

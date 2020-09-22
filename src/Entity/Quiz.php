@@ -79,6 +79,20 @@ class Quiz
         return $this;
     }
 
+    public function Activate() :self
+    {
+        $this->isActive = true;
+
+        return $this;
+    }
+
+    public function Deactivate() :self
+    {
+        $this->isActive = false;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Question[]
      */
