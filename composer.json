@@ -93,7 +93,6 @@
             "security-checker security:check": "script"
         },
         "post-install-cmd": [
-            "chmod -R 777 public/"
         ],
         "post-update-cmd": [
             "@auto-scripts"
