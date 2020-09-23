@@ -39,7 +39,6 @@ class UsersController extends AbstractController
         }
         $query = $queryBuilder->getQuery();
 
-        $users = $this->usersManager->getAllUsers();
         $paginationUsers = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
