@@ -44,6 +44,7 @@ class UsersController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
+
         $form = $this->createForm(SelectUsersType::class, null, [
             'users' => $paginationUsers,
         ]);

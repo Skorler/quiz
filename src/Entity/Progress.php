@@ -75,6 +75,11 @@ class Progress
         return $count;
     }
 
+    public function getSize() : int
+    {
+        return $this->getUserAnswers()->count();
+    }
+
     public function __construct()
     {
         $this->userAnswers = new ArrayCollection();
