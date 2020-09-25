@@ -63,6 +63,18 @@ class Progress
      */
     private ?int $questionNumber;
 
+    public function getScore() : int
+    {
+        $count = 0;
+        foreach ($this->getUserAnswers() as $answer ) {
+            if ($answer->getIsCorrect()) {
+                $count+=1;
+            }
+        }
+
+        return $count;
+    }
+
     public function __construct()
     {
         $this->userAnswers = new ArrayCollection();

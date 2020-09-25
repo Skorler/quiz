@@ -27,18 +27,18 @@
                         {% if current_user == app.user %}
                             <th style="background-color: darkgray" scope="row">asd</th>
                             <td style="background-color: darkgray">{{ progress.user.username }}</td>
-                            <td style="background-color: darkgray">score</td>
+                            <td style="background-color: darkgray">{{ progress.getScore }}</td>
                             <td style="background-color: darkgray">
-                                {% set difference = date(progress.endDate).diff(date(progress.startDate)) %}
-                                {{ difference|date("%h:%i:%s") }}
+                                {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) // 60 }}
+                                : {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) % 60 }}
                             </td>
                         {% else %}
                             <th scope="row">asd</th>
                             <td>{{ progress.user.username }}</td>
-                            <td>score</td>
+                            <td>{{ progress.getScore }}</td>
                             <td>
-                                {% set difference = date(progress.endDate).diff(date(progress.startDate)) %}
-                                {{ difference|date("%h:%i:%s") }}
+                                {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) // 60 }}
+                                : {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) % 60 }}
                             </td>
                         {% endif %}
                     </tr>
