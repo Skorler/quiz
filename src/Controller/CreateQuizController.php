@@ -8,6 +8,7 @@ use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Form\CreateQuizFormType;
 use App\Service\Quiz\QuizManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,14 +19,20 @@ class CreateQuizController extends AbstractController
     /**
      * @Route("/admin/new_quiz", name="quiz_create")
      */
-    public function show(Request $request, QuizManager $quizManager) : Response
+    public function show(Request $request, QuizManager $quizManager, PaginatorInterface $paginator) : Response
     {
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findAll();
 
+        $paginationQuestions = $paginator->paginate(
+            $questions,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         $quiz = new Quiz();
         $form = $this->createForm(CreateQuizFormType::class, $quiz, [
-            'questions' => $questions
+            'questions' => $paginationQuestions
         ]);
 
         $form->handleRequest($request);
@@ -37,7 +44,7 @@ class CreateQuizController extends AbstractController
 
         return $this->render('quiz/create_quiz.html.twig', [
             'createQuizForm' => $form->createView(),
-            'questions' => $questions
+            'questions' => $paginationQuestions
         ]);
     }
 }

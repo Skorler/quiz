@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container mx-auto my-auto">
         {% include 'navbar.html.twig' %}
-        <div class="mx-auto text-center" style="width: 100%; height: 100%; background: whitesmoke;">
+        <div class="mx-auto text-center" style="width: 100%; background: whitesmoke;">
             <img src="{{ asset('img/quiz-page-logo.png') }}" alt="quiz" class="card-img-top">
             <table class="table">
                 <thead>
@@ -48,9 +48,9 @@
                                 You must Log in or Sign up to play.
                             {% endif %}
                         </td>
-
                     </tr>
                 {% endfor %}
+                {{ knp_pagination_render(quizes) }}
                 </tbody>
             </table>
     </div>

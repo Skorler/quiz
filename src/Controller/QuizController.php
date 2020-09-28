@@ -14,6 +14,7 @@ use App\Form\UserAnswerFormType;
 use App\Form\UserAnswerResultFormType;
 use App\Service\Question\QuestionManager;
 use App\Service\Quiz\QuizManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,14 +70,20 @@ class QuizController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function edit(Request $request, int $slug, QuestionManager $questionManager) : Response
+    public function edit(Request $request, int $slug, QuestionManager $questionManager, PaginatorInterface $paginator) : Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $quiz = $this->quizManager->findById($slug);
         $questions = $questionManager->getAllQuestions();
 
+        $paginationQuestions = $paginator->paginate(
+            $questions,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         $form = $this->createForm(CreateQuizFormType::class, $quiz, [
-            'questions' => $questions
+            'questions' => $paginationQuestions
         ]);
 
         $form->handleRequest($request);
@@ -89,7 +96,7 @@ class QuizController extends AbstractController
         return $this->render('quiz/edit_quiz.html.twig', [
             'createQuizForm' => $form->createView(),
             'quiz' => $quiz,
-            'questions' => $questions
+            'questions' => $paginationQuestions
         ]);
     }
 
