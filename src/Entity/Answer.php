@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AnswerRepository::class)
@@ -21,6 +22,12 @@ class Answer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min="1",
+     *     max="255",
+     *     minMessage = "Answer must have at least one letter.",
+     *     maxMessage = "Answer must have less then 255 letters."
+     * )
      */
     private ?string $text;
 

@@ -8,6 +8,7 @@ use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
@@ -23,11 +24,23 @@ class Question
 
     /**
      * @ORM\Column(type="text", length=600)
+     * @Assert\Length(
+     *     min="1",
+     *     max="600",
+     *     minMessage = "Question must have at least one letter.",
+     *     maxMessage = "Question must have less then 600 letters."
+     * )
      */
     private ?string $text;
 
     /**
      * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="question", orphanRemoval=true)
+     *
+     *
+     * @Assert\Count(
+     *     min="1",
+     *     minMessage="Question must have at least one answer."
+     * )
      */
     private Collection $answers;
 

@@ -24,22 +24,16 @@
                 <tbody>
                 {% for progress in progresses  %}
                     <tr>
-                        {% if current_user == app.user %}
+                        {% if current_user == progress.user %}
                             <th style="background-color: darkgray" scope="row">kekw</th>
                             <td style="background-color: darkgray">{{ progress.user.username }}</td>
-                            <td style="background-color: darkgray">{{ progress.score }}</td>
-                            <td style="background-color: darkgray">
-                                {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) // 60 }}
-                                : {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) % 60 }}
-                            </td>
+                            <td style="background-color: darkgray">{{ progress.score}}/{{ progress.size }}</td>
+                            <td style="background-color: darkgray">{{ progress.spentTime }}</td>
                         {% else %}
                             <th scope="row">ada</th>
                             <td>{{ progress.user.username }}</td>
                             <td>{{ progress.score }}/{{ progress.size }}</td>
-                            <td>
-                                {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) // 60 }}
-                                : {{ ((date(progress.endDate).timestamp) - (date(progress.startDate).timestamp)) % 60 }}
-                            </td>
+                            <td>{{ progress.spentTime }}</td>
                         {% endif %}
                     </tr>
                 {% endfor %}

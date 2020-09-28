@@ -202,8 +202,7 @@ class QuizController extends AbstractController
         $progresses = $repository->findBy(['quiz' => $quizId, 'isCompleted' => true]);
 
 
-
-        return $this->render('rating/showRating.html.twig', [
+        return $this->render('quiz/rating_quiz.twig', [
             'progresses' => $progresses,
             'current_user' => $user
         ]);

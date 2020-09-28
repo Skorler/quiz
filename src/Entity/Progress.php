@@ -54,7 +54,7 @@ class Progress
     private Collection $userAnswers;
 
     /**
-     * @ORM\OneToOne(targetEntity=Question::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Question::class, cascade={"persist", "remove"})
      */
     private ?Question $lastQuestion;
 
@@ -66,13 +66,21 @@ class Progress
     public function getScore() : int
     {
         $count = 0;
-        foreach ($this->getUserAnswers() as $answer ) {
+        foreach ($this->getUserAnswers() as $answer) {
             if ($answer->getIsCorrect()) {
                 $count+=1;
             }
         }
 
         return $count;
+    }
+
+    public function getSpentTime() : string
+    {
+        $minutes = intdiv(($this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp()), 60);
+        $seconds = ($this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp()) % 60;
+
+        return "$minutes : $seconds";
     }
 
     public function getSize() : int

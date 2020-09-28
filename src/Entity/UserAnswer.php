@@ -26,7 +26,7 @@ class UserAnswer
     private ?Progress $progress;
 
     /**
-     * @ORM\OneToOne(targetEntity=Answer::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Answer::class, cascade={"persist", "remove"})
      */
     private ?Answer $answer;
 
