@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CreateQuizController extends AbstractController
 {
     /**
-     * @Route("/admin/new_quiz", name="app_quiz_new")
+     * @Route("/admin/new_quiz", name="quiz_create")
      */
     public function show(Request $request, QuizManager $quizManager) : Response
     {
@@ -35,7 +35,7 @@ class CreateQuizController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('quiz/new_quiz.html.twig', [
+        return $this->render('quiz/create_quiz.html.twig', [
             'createQuizForm' => $form->createView(),
             'questions' => $questions
         ]);

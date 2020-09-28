@@ -32,4 +32,25 @@ class QuestionManager
         $this->entityManager->persist($question);
         $this->entityManager->flush();
     }
+
+    public function delete(int $questionId) : void
+    {
+        $question = $this->questionRepository->find($questionId);
+        $this->entityManager->remove($question);
+        $this->entityManager->flush();
+    }
+
+    public function findById(int $questionId) : Question
+    {
+        return $this->questionRepository->find($questionId);
+    }
+
+    public function edit(Question $question) : void
+    {
+        foreach ($question->getAnswers() as $answer) {
+            $this->entityManager->persist($answer);
+        }
+        $this->entityManager->persist($question);
+        $this->entityManager->flush();
+    }
 }

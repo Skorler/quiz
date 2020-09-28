@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create the question{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto my-auto">
+        {% include 'navbar.html.twig' %}
+        <div class="text-center" style="background: whitesmoke; width: 100%">
+            {{ form_start(createQuestionForm) }}
+            {{ form_row(createQuestionForm.text, {'attr': {'class': 'mx-auto'}}) }}
+            <ul class="answers" data-prototype="{{ form_widget(createQuestionForm.answers.vars.prototype)|e('html_attr') }}">
+
+            </ul>
+            <button type="submit" class="btn btn-primary" id="create">Save changes</button>
+            {{ form_rest(createQuestionForm) }}
+            {{ form_end(createQuestionForm) }}
+        </div>
+    </div>
+    {% block javascripts %}
+        <script src="{{ asset('js/create_question.js')}}"></script>
+    {% endblock %}
+{% endblock %}

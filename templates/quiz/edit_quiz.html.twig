@@ -23,6 +23,7 @@
                     </th>
                     <th scope="col">#</th>
                     <th scope="col">Text</th>
+                    <th scope="col">Interactions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,10 @@
                         </td>
                         <th scope="row">{{ question.id }}</th>
                         <td>{{ question.text }}</td>
+                        <td>
+                            <a href="{{ path('edit_question', {'questionId': (question.id)}) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ path('delete_question', {'questionId': (question.id)}) }}" class="btn btn-danger">Delete</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

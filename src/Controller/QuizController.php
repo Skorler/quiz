@@ -53,7 +53,7 @@ class QuizController extends AbstractController
     }
 
     /**
-     * @Route("/admin/quiz/delete/{slug}", name="quiz_deactivate")
+     * @Route("/admin/quiz/delete/{slug}", name="quiz_delete")
      * @param Request $request
      * @return Response
      */
@@ -202,7 +202,7 @@ class QuizController extends AbstractController
         $progresses = $repository->findBy(['quiz' => $quizId, 'isCompleted' => true]);
 
 
-        return $this->render('quiz/rating_quiz.twig', [
+        return $this->render('rating_quiz.html.twig', [
             'progresses' => $progresses,
             'current_user' => $user
         ]);

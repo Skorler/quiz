@@ -30,15 +30,23 @@
                         <td>
                             {% if is_granted('ROLE_ADMIN') %}
                                 {% if quiz.isActive %}
-                                    <a href="/admin/quiz/deactivate/{{ quiz.id }}" class="btn btn-primary">Deactivate</a>
+                                    <a href="{{ path('quiz_deactivate', {'slug': (quiz.id)}) }}" class="btn btn-primary">Deactivate</a>
                                 {% else %}
-                                    <a href="/admin/quiz/activate/{{ quiz.id }}" class="btn btn-primary">Activate</a>
+                                    <a href="{{ path('quiz_activate', {'slug': (quiz.id)}) }}" class="btn btn-primary">Activate</a>
                                 {% endif %}
-                                <a href="/admin/quiz/delete/{{ quiz.id }}" class="btn btn-primary">Delete</a>
-                                <a href="/admin/quiz/edit/{{ quiz.id }}" class="btn btn-primary">Edit</a>
+                                <a href="{{ path('quiz_delete', {'slug': (quiz.id)}) }}" class="btn btn-danger">Delete</a>
+                                <a href="{{ path('quiz_edit', {'slug': (quiz.id)}) }}" class="btn btn-primary">Edit</a>
                             {% endif %}
-                            <a href="/quiz/{{ quiz.id }}/play" class="btn btn-primary">Start</a>
+                            {% if app.user %}
+                                {% if quiz.isActive %}
+                                    <a href="/quiz/{{ quiz.id }}/play" class="btn btn-primary">Start</a>
+                                {% else %}
+                                    Quiz is inactive.
+                                {% endif %}
                             <a href="/quiz/{{ quiz.id }}/top" class="btn btn-primary">Top</a>
+                                {% else %}
+                                You must Log in or Sign up to play.
+                            {% endif %}
                         </td>
 
                     </tr>

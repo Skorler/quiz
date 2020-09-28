@@ -23,6 +23,7 @@
                     </th>
                     <th scope="col">#</th>
                     <th scope="col">Text</th>
+                    <th scope="col">Interactions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,13 +34,17 @@
                         </td>
                         <th scope="row">{{ question.id }}</th>
                         <td>{{ question.text }}</td>
+                        <td>
+                            <a href="{{ path('edit_question', {'questionId': (question.id)}) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ path('delete_question', {'questionId': (question.id)}) }}" class="btn btn-danger">Delete</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <div class="mt-1 mb-2 d-flex" style="background-color: #343a40; height: 5%; width: 100%">
                 <div class="col-lg-1"></div>
-                <span class="text-white col-lg-6 text-left" style="font-size: 20px">Currently not included questions</span>
+                <div class="col-lg-6"></div>
                 <div class="col-lg-1"></div>
                 <button type="submit" class="btn btn-primary" id="create">Create quiz</button>
                 <a href="{{ path('create_question') }}" type="button" id="btn2" class="btn btn-primary col-lg-2 text-center" style="height: 100%;" target="_blank" rel="noreferrer noopener">New question</a>
